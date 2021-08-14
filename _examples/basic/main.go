@@ -16,7 +16,7 @@ func main() {
 		SetCapture(true).
 		SetConfirmation(
 			payment.Confirmation{
-				Type:      "redirect",
+				Type:      payment.Redirect,
 				ReturnURL: "https://www.merchant-website.com/return_url",
 			}).
 		SetDescription("Default GoYooKassa test").Do()
@@ -38,7 +38,7 @@ func main() {
 	//	},
 	//		"confirmation": {
 	//		"type": "redirect",
-	//			"confirmation_url": "https://yoomoney.ru/checkout/payments/v2/contract?orderId=0"
+	//		"confirmation_url": "https://yoomoney.ru/checkout/payments/v2/contract?orderId=0"
 	//	},
 	//		"created_at": "2021-08-13T14:13:46.45Z",
 	//		"description": "Default test in GoYooKassa package",

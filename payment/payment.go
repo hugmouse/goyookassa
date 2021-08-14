@@ -96,13 +96,28 @@ type Recipient struct {
 //
 // Sometimes YooMoney's partners charge additional commission from the users that is not included in this amount.
 type Amount struct {
-	Value    decimal.Decimal `json:"value"`
-	Currency string          `json:"currency,omitempty"`
+	// Value is how much money you want to get from someone
+	Value decimal.Decimal `json:"value"`
+	// Currency is three letter currency code (ex: RUB)
+	Currency string `json:"currency,omitempty"`
 }
 
+// Confirmation information required to initiate the selected payment confirmation scenario by the user.
+//
+// More about confirmation scenarios: https://yookassa.ru/en/developers/payments/payment-process#user-confirmation
 type Confirmation struct {
-	Type      string `json:"type,omitempty"`
-	ReturnURL string `json:"return_url,omitempty"`
+	// Type Confirmation scenario code
+	Type ConfirmationType `json:"type"`
+	// Enforce a request for making a payment with authentication by 3-D Secure.
+	//
+	// It works if you accept bank card payments without user confirmation by default.
+	// In other cases, the 3-D Secure authentication will be handled by YooMoney.
+	// If you would like to accept payments without additional confirmation by the user, contact your YooMoney manager.
+	//
+	// Works only with ConfirmationType == Redirect
+	Enforce bool `json:"enforce"`
+	// ReturnURL is the URL that the user will return to after confirming or canceling the payment on the webpage
+	ReturnURL string `json:"return_url"`
 }
 
 type AmountFromResponse struct {
@@ -113,6 +128,46 @@ type AmountFromResponse struct {
 type ConfirmationFromResponse struct {
 	Type            string `json:"type"`
 	ConfirmationURL string `json:"confirmation_url"`
+}
+
+// ConfirmationType is one of the Confirmation scenarios
+//
+// More about confirmation scenarios: https://yookassa.ru/en/developers/payments/payment-process#confirmation-scenarios
+type ConfirmationType int
+
+const (
+	// Embedded confirmation scenario: actions required for payment confirmation will depend on the payment method
+	// selected by the user in the YooMoney Checkout Widget.
+	// YooMoney will receive the confirmation from the user: all you need to do is embed the widget to your page.
+	Embedded ConfirmationType = iota
+
+	// External confirmation scenario:
+	// to continue, the user takes action in an external system (for example, responds to a text message).
+	// All you need to do is let them know how to proceed.
+	External
+
+	// The MobileApplication confirmation scenario: to confirm a payment, the user needs to complete an action
+	// in a mobile app (for example, in an online banking app).
+	// You need to redirect the user to the ConfirmationURL (ConfirmationFromResponse) received in the payment.
+	// After the payment is made successfully (or if something goes wrong), YooMoney will redirect the user back
+	// to the return_url that you send in your request for creating the payment.
+	// This payment confirmation scenario only works on mobile devices (via mobile app or mobile web version).
+	MobileApplication
+
+	// QR confirmation scenario: to confirm the payment, the user scans a QR code.
+	// You will need to generate the QR code using any available tools and display it on the payment page.
+	QR
+
+	// Redirect confirmation scenario: the user takes action on the YooMoney’s page or its partner’s page
+	// (for example, enters bank card details or completes identification process via 3-D Secure).
+	// You must redirect the user to ConfirmationURL (ConfirmationFromResponse) received in the payment.
+	// If the payment is successful (or if something goes wrong),
+	// YooMoney will return the user to return_url that you’ll send in the payment creation request.
+	Redirect
+)
+
+func (c ConfirmationType) String() string {
+	return [...]string{"embedded", "external", "mobile_application", "qr", "redirect"}[c]
 }
 
 // NewKassa creates and initializes a new Kassa (YooKassa shop id and shop secret key)
