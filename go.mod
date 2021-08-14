@@ -1,4 +1,4 @@
-module hugmouse/goyookassa
+module github.com/hugmouse/goyookassa
 
 go 1.17
 
