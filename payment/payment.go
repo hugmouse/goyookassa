@@ -92,7 +92,7 @@ type Recipient struct {
 	GatewayID string `json:"gateway_id"`
 }
 
-// Amount
+// Amount (payment amount)
 //
 // Sometimes YooMoney's partners charge additional commission from the users that is not included in this amount.
 type Amount struct {
@@ -168,6 +168,45 @@ const (
 
 func (c ConfirmationType) String() string {
 	return [...]string{"embedded", "external", "mobile_application", "qr", "redirect"}[c]
+}
+
+type List struct {
+	Type       string  `json:"type"`
+	Items      []Items `json:"items"`
+	NextCursor string  `json:"next_cursor"`
+}
+type Metadata struct {
+}
+type Card struct {
+	First6        string `json:"first6"`
+	Last4         string `json:"last4"`
+	ExpiryMonth   string `json:"expiry_month"`
+	ExpiryYear    string `json:"expiry_year"`
+	CardType      string `json:"card_type"`
+	IssuerCountry string `json:"issuer_country"`
+	IssuerName    string `json:"issuer_name"`
+}
+type Method struct {
+	Type  string `json:"type"`
+	ID    string `json:"id"`
+	Saved bool   `json:"saved"`
+	Card  Card   `json:"card"`
+	Title string `json:"title"`
+}
+
+type Items struct {
+	ID            string    `json:"id"`
+	Status        string    `json:"status"`
+	Paid          bool      `json:"paid"`
+	Amount        Amount    `json:"amount"`
+	CreatedAt     time.Time `json:"created_at"`
+	Description   string    `json:"description"`
+	ExpiresAt     time.Time `json:"expires_at"`
+	Metadata      Metadata  `json:"metadata"`
+	PaymentMethod Method    `json:"payment_method"`
+	Recipient     Recipient `json:"recipient"`
+	Refundable    bool      `json:"refundable"`
+	Test          bool      `json:"test"`
 }
 
 // NewKassa creates and initializes a new Kassa (YooKassa shop id and shop secret key)
@@ -281,4 +320,26 @@ func (p *Payment) Do() (*YooKassaResponse, error) {
 	}
 
 	return respKassa, nil
+}
+
+func (c *Kassa) ListPayments() *List {
+	req, err := http.NewRequest("GET", consts.Endpoint+"payments", nil)
+	if err != nil {
+		return nil
+	}
+	req.SetBasicAuth(c.ShopID, c.SecretKey)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil
+	}
+	defer resp.Body.Close()
+
+	listFromJSON := new(List)
+	err = json.NewDecoder(resp.Body).Decode(&listFromJSON)
+	if err != nil {
+		return nil
+	}
+
+	return listFromJSON
 }
