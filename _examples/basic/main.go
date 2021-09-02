@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hugmouse/goyookassa/payment"
 	"github.com/shopspring/decimal"
-	"hugmouse/goyookassa/payment"
 )
 
 func main() {

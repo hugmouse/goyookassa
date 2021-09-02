@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"hugmouse/goyookassa/payment"
+	"github.com/hugmouse/goyookassa/payment"
 )
 
 func main() {
