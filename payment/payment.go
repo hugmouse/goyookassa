@@ -107,7 +107,7 @@ type Amount struct {
 // More about confirmation scenarios: https://yookassa.ru/en/developers/payments/payment-process#user-confirmation
 type Confirmation struct {
 	// Type Confirmation scenario code
-	Type ConfirmationType `json:"type"`
+	Type string `json:"type"`
 	// Enforce a request for making a payment with authentication by 3-D Secure.
 	//
 	// It works if you accept bank card payments without user confirmation by default.
