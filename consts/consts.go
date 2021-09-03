@@ -66,4 +66,16 @@ const (
 	TestingCardCancelledByYooMoneyFraudSuspectedMastercard = "5555555555554634"
 	TestingCardCancelledByYooMoneyFraudSuspectedVisa       = "4119098878796485"
 	TestingCardCancelledByYooMoneyFraudSuspectedMir        = "2201696981989955"
+
+	TestingCardSuccessfulMastercard3DSecure = "5555555555554477"
+	TestingCardSuccessfulMastercard         = "5555555555554444"
+	TestingCardSuccessfulMaestro            = "6759649826438453"
+	TestingCardSuccessfulVisa3DSecure       = "4793128161644804"
+	TestingCardSuccessfulVisa               = "4111111111111111"
+	TestingCardSuccessfulVisaElectron       = "4175001000000017"
+	TestingCardSuccessfulMir3DSecure        = "2200000000000004"
+	TestingCardSuccessfulMir                = "2202474301322987"
+	TestingCardSuccessfulAmericanExpress    = "370000000000002"
+	TestingCardSuccessfulJCB                = "3528000700000000"
+	TestingCardSuccessfulDinersClub         = "36700102000000"
 )
