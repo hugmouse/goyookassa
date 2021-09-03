@@ -22,6 +22,42 @@ type Kassa struct {
 	SecretKey string
 }
 
+type FromResponse struct {
+	ID     string `json:"id"`
+	Status string `json:"status"`
+	Paid   bool   `json:"paid"`
+	Amount struct {
+		Value    string `json:"value"`
+		Currency string `json:"currency"`
+	} `json:"amount"`
+	CreatedAt   time.Time `json:"created_at"`
+	Description string    `json:"description"`
+	ExpiresAt   time.Time `json:"expires_at"`
+	Metadata    struct {
+	} `json:"metadata"`
+	PaymentMethod struct {
+		Type  string `json:"type"`
+		ID    string `json:"id"`
+		Saved bool   `json:"saved"`
+		Card  struct {
+			First6        string `json:"first6"`
+			Last4         string `json:"last4"`
+			ExpiryMonth   string `json:"expiry_month"`
+			ExpiryYear    string `json:"expiry_year"`
+			CardType      string `json:"card_type"`
+			IssuerCountry string `json:"issuer_country"`
+			IssuerName    string `json:"issuer_name"`
+		} `json:"card"`
+		Title string `json:"title"`
+	} `json:"payment_method"`
+	Recipient struct {
+		AccountID string `json:"account_id"`
+		GatewayID string `json:"gateway_id"`
+	} `json:"recipient"`
+	Refundable bool `json:"refundable"`
+	Test       bool `json:"test"`
+}
+
 type Payment struct {
 	*Kassa `json:"-"`
 
@@ -342,4 +378,26 @@ func (c *Kassa) ListPayments() *List {
 	}
 
 	return listFromJSON
+}
+
+func (c *Kassa) GetPayment(id string) *FromResponse {
+	req, err := http.NewRequest("GET", consts.Endpoint+"payments/"+id, nil)
+	if err != nil {
+		return nil
+	}
+	req.SetBasicAuth(c.ShopID, c.SecretKey)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil
+	}
+	defer resp.Body.Close()
+
+	payment := new(FromResponse)
+	err = json.NewDecoder(resp.Body).Decode(&payment)
+	if err != nil {
+		return nil
+	}
+
+	return payment
 }
