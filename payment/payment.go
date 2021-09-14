@@ -91,6 +91,19 @@ type Payment struct {
 	//
 	// Also description must not exceed 128 characters
 	Description string `json:"description,omitempty"`
+
+	// SavePaymentMethod is used for recurrent payments
+	//
+	// Learn more at: https://yookassa.ru/en/developers/payments/recurring-payments
+	SavePaymentMethod bool `json:"save_payment_method"`
+
+	// PaymentMethodID is used for recurrent payments
+	//
+	// Recurring payments are only enabled by default in the demo store.
+	// If you want to enable them in your real store, contact the YooMoney manager.
+	//
+	// Learn more at: https://yookassa.ru/en/developers/payments/recurring-payments?lang=bash#pay-with-saved
+	PaymentMethodID string `json:"payment_method_id"`
 }
 
 // YooKassaResponse is default YooKassa endpoint response to payment creation request
@@ -309,6 +322,19 @@ func (p *Payment) SetConfirmation(conf Confirmation) *Payment {
 // SetDescription sets payment's description (128 character max)
 func (p *Payment) SetDescription(desc string) *Payment {
 	p.Description = desc
+	return p
+}
+
+// SetSavePaymentMethod saves the payment method, used in recurrent payments
+func (p *Payment) SetSavePaymentMethod(save bool) *Payment {
+	p.SavePaymentMethod = save
+	return p
+}
+
+// SetPaymentMethodID sets payment method ID.
+// You can obtain ID from payment where you saved payment method (SetSavePaymentMethod)
+func (p *Payment) SetPaymentMethodID(id string) *Payment {
+	p.PaymentMethodID = id
 	return p
 }
 
