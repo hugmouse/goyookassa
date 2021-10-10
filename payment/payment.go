@@ -347,11 +347,11 @@ func (p *Payment) SetPaymentMethodID(id string) *Payment {
 	return p
 }
 
-// SetPaymentMethodDataType sets payment method. Like bank card
+// SetPaymentMethodData sets payment method. Like bank card
 //
 // More info: https://yookassa.ru/en/developers/payments/recurring-payments#save
-func (p *Payment) SetPaymentMethodDataType(t string) *Payment {
-	p.PaymentMethodData.Type = t
+func (p *Payment) SetPaymentMethodData(md MethodData) *Payment {
+	p.PaymentMethodData = &md
 	return p
 }
 
