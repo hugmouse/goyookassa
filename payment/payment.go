@@ -86,6 +86,11 @@ type Payment struct {
 	// More about confirmation scenarios: https://yookassa.ru/en/developers/payments/payment-process#user-confirmation
 	Confirmation *Confirmation `json:"confirmation,omitempty"`
 
+	// PaymentMethodData is used in recurrent payments
+	//
+	// More info: https://yookassa.ru/en/developers/payments/recurring-payments#save
+	PaymentMethodData *MethodData `json:"payment_method_data,omitempty"`
+
 	// Description is used if you want to add a payment description that’ll be displayed in the Merchant Profile to you,
 	// and during the payment to the user
 	//
@@ -104,6 +109,10 @@ type Payment struct {
 	//
 	// Learn more at: https://yookassa.ru/en/developers/payments/recurring-payments?lang=bash#pay-with-saved
 	PaymentMethodID string `json:"payment_method_id,omitempty"`
+}
+
+type MethodData struct {
+	Type string `json:"type"`
 }
 
 // YooKassaResponse is default YooKassa endpoint response to payment creation request
@@ -335,6 +344,14 @@ func (p *Payment) SetSavePaymentMethod(save bool) *Payment {
 // You can obtain ID from payment where you saved payment method (SetSavePaymentMethod)
 func (p *Payment) SetPaymentMethodID(id string) *Payment {
 	p.PaymentMethodID = id
+	return p
+}
+
+// SetPaymentMethodDataType sets payment method. Like bank card
+//
+// More info: https://yookassa.ru/en/developers/payments/recurring-payments#save
+func (p *Payment) SetPaymentMethodDataType(t string) *Payment {
+	p.PaymentMethodData.Type = t
 	return p
 }
 
