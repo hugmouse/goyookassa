@@ -84,7 +84,7 @@ type Payment struct {
 	// Confirmation information required to initiate the selected payment confirmation scenario by the user.
 	//
 	// More about confirmation scenarios: https://yookassa.ru/en/developers/payments/payment-process#user-confirmation
-	Confirmation Confirmation `json:"confirmation"`
+	Confirmation *Confirmation `json:"confirmation,omitempty"`
 
 	// Description is used if you want to add a payment description that’ll be displayed in the Merchant Profile to you,
 	// and during the payment to the user
@@ -95,7 +95,7 @@ type Payment struct {
 	// SavePaymentMethod is used for recurrent payments
 	//
 	// Learn more at: https://yookassa.ru/en/developers/payments/recurring-payments
-	SavePaymentMethod bool `json:"save_payment_method"`
+	SavePaymentMethod bool `json:"save_payment_method,omitempty"`
 
 	// PaymentMethodID is used for recurrent payments
 	//
@@ -103,7 +103,7 @@ type Payment struct {
 	// If you want to enable them in your real store, contact the YooMoney manager.
 	//
 	// Learn more at: https://yookassa.ru/en/developers/payments/recurring-payments?lang=bash#pay-with-saved
-	PaymentMethodID string `json:"payment_method_id"`
+	PaymentMethodID string `json:"payment_method_id,omitempty"`
 }
 
 // YooKassaResponse is default YooKassa endpoint response to payment creation request
@@ -315,7 +315,7 @@ func (p *Payment) SetCapture(cap bool) *Payment {
 
 // SetConfirmation sets payment's confirmation info
 func (p *Payment) SetConfirmation(conf Confirmation) *Payment {
-	p.Confirmation = conf
+	p.Confirmation = &conf
 	return p
 }
 
